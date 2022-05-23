@@ -1,0 +1,15 @@
+@use '/src/styles/constants/colors';
+
+.card {
+  display: flex;
+  flex-direction: column;
+  grid-column-end: span 4;
+  min-width: 230px;
+  max-width: 270px;
+  padding: 16px;
+  cursor: pointer;
+  background-color: #ffffff;
+  border: 1px solid rgb(206, 206, 206);
+  border-radius: 20px;
+  transition: all 0.3s ease 0s;
+}
