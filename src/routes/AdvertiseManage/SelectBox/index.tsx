@@ -11,11 +11,11 @@ interface ISelectBoxProps {
 const SelectBox = ({ selectList, currentSelect, setCurrentSelect }: ISelectBoxProps): JSX.Element => {
   const [openSelect, setOpenSelect] = useState(false)
 
-  const handleVisibleSelect = () => {
+  const handleVisibleOptions = () => {
     setOpenSelect((prev) => !prev)
   }
 
-  const handleLiClickHandler = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleListClick = (e: MouseEvent<HTMLButtonElement>) => {
     const selectedValue = e.currentTarget.dataset.value
     setCurrentSelect(selectedValue ?? selectList[0])
     setOpenSelect(false)
@@ -23,14 +23,14 @@ const SelectBox = ({ selectList, currentSelect, setCurrentSelect }: ISelectBoxPr
 
   return (
     <div className={cx(styles.select, { [styles.openSelect]: openSelect })}>
-      <button type='button' className={styles.selected} onClick={handleVisibleSelect}>
+      <button type='button' className={styles.selected} onClick={handleVisibleOptions}>
         <div className={styles.selectedValue}>{currentSelect}</div>
       </button>
       <ul>
         {selectList.map((value) => {
           return (
             <li className={styles.option} key={value}>
-              <button type='button' data-value={value} onClick={handleLiClickHandler}>
+              <button type='button' data-value={value} onClick={handleListClick}>
                 {value}
               </button>
             </li>
