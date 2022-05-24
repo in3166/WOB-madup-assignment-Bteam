@@ -1,15 +1,4 @@
-import {
-  ChangeEvent,
-  Children,
-  Dispatch,
-  FormEvent,
-  MouseEvent,
-  MouseEventHandler,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react'
-import ReactDOM from 'react-dom'
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react'
 
 import { IAdsItem } from 'types/ads'
 import { CloseIcon, InputCancelIcon } from 'assets/svgs/index'

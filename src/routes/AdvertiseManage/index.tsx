@@ -7,14 +7,14 @@ import { IAdsItem } from 'types/ads'
 import { useRecoil } from 'hooks/state'
 import { adsListState } from 'states/adsItem'
 import { getAdsItemList } from 'services/ads'
-import { filterAdsItems } from './utils/filterAdsItems'
 
-import DropDown from '../../components/DropDown'
 import ContentCard from './ContentCard'
 import styles from './advertiseManage.module.scss'
 import AdvertiseModal from './AdvertiseModal/AdvertiseModal'
-import Container from 'components/Container'
-import Loading from 'components/Loading'
+import Container from 'routes/_shared/Container'
+import DropDown from 'routes/_shared/DropDown'
+import Loading from 'routes/_shared/Loading'
+import { filterAdsItems } from './utils/filterAdsItems'
 
 const SELECT_LIST = ['전체 광고', '진행 광고', '중지 광고']
 
@@ -83,11 +83,11 @@ const AdvertiseManage = (): JSX.Element => {
 
       {!isLoading && <Loading />}
       <div className={styles.cards}>
-        {/* {adsList
+        {adsList
           .filter((value) => filterAdsItems(value, currentSelect))
           .map((value) => {
             return <ContentCard key={value.id} adsItem={value} handleOpenModal={handleOpenModal} />
-          })} */}
+          })}
       </div>
 
       <AdvertiseModal openModal={visibleModal} selectedAdId={selectedAdId} setVisibleModal={setVisibleModal} />
