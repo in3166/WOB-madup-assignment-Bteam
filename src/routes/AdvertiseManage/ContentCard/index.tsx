@@ -14,18 +14,20 @@ const ContentCard = ({ adsItem, handleOpenModal }: IContentCardProps): JSX.Eleme
   const adsTitle = adsItem.adType === 'web' ? `웹광고_${adsItem.title}` : `앱광고_${adsItem.title}`
 
   const adsStatus = adsItem.status === 'active' ? '진행중' : '종료'
-  let adsCreatedAt = adsItem.endDate || adsItem.startDate
-  adsCreatedAt = dayjs(adsCreatedAt).format('YYYY-MM-DD').toString()
+  const startDate = dayjs(adsItem.startDate).format('YYYY-MM-DD')
+  const endDate = adsItem.endDate && dayjs(adsItem.endDate).format('YYYY-MM-DD')
+  const adsCreatedAt = endDate ? `${startDate} (${endDate})` : startDate
 
   const adsBudget = convertCurrencyUnits(adsItem.budget).toLocaleString()
   const adsRoas = adsItem.report.roas
 
+  // roas * 광고비 / 100
   let tempAdsSales = getMultiple(adsItem.report.roas, adsItem.report.cost)
   tempAdsSales = getDivide(tempAdsSales, 100)
-  tempAdsSales = convertCurrencyUnits(tempAdsSales)
-  const adsSales = tempAdsSales.toLocaleString()
+  const adsSales = convertCurrencyUnits(tempAdsSales)
+  // /const adsSales = tempAdsSales.toLocaleString()
 
-  const adsCost = convertCurrencyUnits(adsItem.report.cost).toLocaleString()
+  const adsCost = convertCurrencyUnits(adsItem.report.cost)
 
   // TODO: 단위 맞음?
   return (
@@ -43,7 +45,7 @@ const ContentCard = ({ adsItem, handleOpenModal }: IContentCardProps): JSX.Eleme
       </dl>
       <dl>
         <dt>일 희망 예산</dt>
-        <dd>{adsBudget}만원</dd>
+        <dd>{adsBudget}</dd>
       </dl>
       <dl>
         <dt>광고 수익률</dt>
@@ -51,13 +53,13 @@ const ContentCard = ({ adsItem, handleOpenModal }: IContentCardProps): JSX.Eleme
       </dl>
       <dl>
         <dt>매출</dt>
-        <dd>{adsSales}만원</dd>
+        <dd>{adsSales}</dd>
       </dl>
       <dl>
         <dt>광고 비용</dt>
-        <dd>{adsCost}만원</dd>
+        <dd>{adsCost}</dd>
       </dl>
-      <button type='button' data-id={adsItem.id} onClick={handleOpenModal}>
+      <button type='button' data-item={JSON.stringify(adsItem)} onClick={handleOpenModal}>
         수정하기
       </button>
     </article>

@@ -10,7 +10,7 @@ import { getAdsItemList } from 'services/ads'
 
 import ContentCard from './ContentCard'
 import styles from './advertiseManage.module.scss'
-import AdvertiseModal from './AdvertiseModal/AdvertiseModal'
+import AdvertiseModal from './Modal/AdvertiseModal/AdvertiseModal'
 import Container from 'routes/_shared/Container'
 import DropDown from 'routes/_shared/DropDown'
 import Loading from 'routes/_shared/Loading'
@@ -22,7 +22,7 @@ const AdvertiseManage = (): JSX.Element => {
   const [currentSelect, setCurrentSelect] = useState(SELECT_LIST[0])
   const [adsList, setAdsList] = useRecoil(adsListState)
   const [visibleModal, setVisibleModal] = useState(false)
-  const [selectedAdId, setSelectedAdId] = useState('')
+  const [selectedAdItem, setSelectedAdItem] = useState<IAdsItem | null>(null)
 
   // TODO: 분리
   const { isLoading, data } = useQuery(
@@ -43,7 +43,7 @@ const AdvertiseManage = (): JSX.Element => {
     }
   )
 
-  console.log(adsList, isLoading, data)
+  // console.log(adsList, isLoading, data)
 
   useEffect(() => {
     if (data && data.length > 0) {
@@ -61,8 +61,10 @@ const AdvertiseManage = (): JSX.Element => {
   }, [data, setAdsList])
 
   const handleOpenModal = (e: MouseEvent<HTMLButtonElement>) => {
-    const adItemId = e.currentTarget.dataset.id
-    setSelectedAdId(adItemId || '')
+    const tempItem = e.currentTarget.dataset.item ?? ''
+
+    const adItem = tempItem !== '' ? JSON.parse(tempItem) : ''
+    setSelectedAdItem(adItem || null)
     setVisibleModal(true)
   }
 
@@ -81,7 +83,7 @@ const AdvertiseManage = (): JSX.Element => {
         </button>
       </header>
 
-      {!isLoading && <Loading />}
+      {isLoading && <Loading />}
       <div className={styles.cards}>
         {adsList
           .filter((value) => filterAdsItems(value, currentSelect))
@@ -90,7 +92,9 @@ const AdvertiseManage = (): JSX.Element => {
           })}
       </div>
 
-      <AdvertiseModal openModal={visibleModal} selectedAdId={selectedAdId} setVisibleModal={setVisibleModal} />
+      {visibleModal && (
+        <AdvertiseModal openModal={visibleModal} selectedAdItem={selectedAdItem} setVisibleModal={setVisibleModal} />
+      )}
     </Container>
   )
 }

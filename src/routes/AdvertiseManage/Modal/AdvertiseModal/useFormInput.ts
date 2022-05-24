@@ -6,35 +6,43 @@ interface IUseFormInputProps {
 }
 
 const useFormInput = ({ validateFunction, initialValue }: IUseFormInputProps) => {
-  const [enteredValue, setEnteredValue] = useState(initialValue)
+  console.log('init : ', initialValue)
+  const [value, setValue] = useState(initialValue)
   const [isTouched, setIsTouched] = useState(false)
+  console.log('value : ', value)
 
   let valueIsValid = true
-  if (validateFunction) valueIsValid = validateFunction(enteredValue)
+  if (validateFunction) valueIsValid = validateFunction(value)
 
   const hasError = !valueIsValid && isTouched
 
   const valueChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.currentTarget
-    setEnteredValue(value)
+    const { value: currentValue } = e.currentTarget
+    setValue(currentValue)
   }
 
   const valueClickHandler = (e: MouseEvent<HTMLInputElement>) => {
-    const { value } = e.currentTarget
-    setEnteredValue(value)
+    const { value: currentValue } = e.currentTarget
+    setValue(currentValue)
   }
 
   const inputBlurHandler = () => {
     setIsTouched(true)
   }
 
+  const reset = () => {
+    setValue(initialValue)
+    setIsTouched(false)
+  }
+
   return {
-    value: enteredValue,
-    setValue: setEnteredValue,
+    value,
+    setValue,
     hasError,
     valueChangeHandler,
     valueClickHandler,
     inputBlurHandler,
+    reset,
   }
 }
 

@@ -1,60 +1,50 @@
 import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react'
 
-import { IAdsItem } from 'types/ads'
 import { CloseIcon, InputCancelIcon } from 'assets/svgs/index'
 import styles from './advertiseModal.module.scss'
 import { cx } from 'styles'
-import { useMount } from 'hooks'
 import { useRecoil } from 'hooks/state'
 import { adsListState } from 'states/adsItem'
-import Modal from '../Modal'
-import useFormInput from 'routes/AdvertiseManage/AdvertiseModal/useFormInput'
+import Modal from '..'
+import useFormInput from 'routes/AdvertiseManage/Modal/AdvertiseModal/useFormInput'
+import { IAdsItem } from 'types/ads'
 
 interface IAdsModalProps {
-  selectedAdId: string
+  selectedAdItem: IAdsItem | null
   openModal: boolean
   setVisibleModal: Dispatch<SetStateAction<boolean>>
 }
 
-const AdvertiseModal = ({ selectedAdId, setVisibleModal, openModal }: IAdsModalProps): JSX.Element => {
-  const [ads] = useRecoil(adsListState)
+// TODO: 분리
+function validateTitle(value: string) {
+  return value.length > 4
+}
+
+const AdvertiseModal = ({ selectedAdItem, setVisibleModal, openModal }: IAdsModalProps): JSX.Element => {
   const {
     value: adsType,
     setValue: setAdsType,
     valueClickHandler: typeClickHandler,
-  } = useFormInput({ initialValue: 'web' })
+  } = useFormInput({ initialValue: selectedAdItem?.adType || 'web' })
 
-  const { value: url, hasError: urlHasError, valueChangeHandler: urlChangeHandler } = useFormInput({ initialValue: '' })
   const {
     value: title,
     hasError: titleHasError,
     setValue: setTitle,
     valueChangeHandler: titleChangeHandler,
-  } = useFormInput({ initialValue: '' })
+    inputBlurHandler: handleTitleBlur,
+  } = useFormInput({ validateFunction: validateTitle, initialValue: selectedAdItem?.title ?? '' })
 
-  const [budget, setBudget] = useState(0)
+  const [budget, setBudget] = useState(Number(selectedAdItem?.budget))
 
   const handleChangeBudget = (e: ChangeEvent<HTMLInputElement>) => {
     setBudget(Number(e.currentTarget.value))
   }
 
-  useEffect(() => {
-    if (selectedAdId === '') return undefined
-    const selectedAd = ads.find((value) => value.id === Number(selectedAdId))
-    const selectedAdTitle = selectedAd?.title
-    const selectedAdType = selectedAd?.adType
-    const selectedAdBudget = selectedAd?.budget
-
-    setTitle(selectedAdTitle || '')
-    setAdsType(selectedAdType || 'web')
-    setBudget(selectedAdBudget || 0)
-    return undefined
-  }, [ads, selectedAdId, setAdsType, setTitle])
-
   const handleOnSubmit = (e: FormEvent) => {
     e.preventDefault()
-    console.log(e.currentTarget)
-    console.log(title)
+    // console.log(e.currentTarget)
+    // console.log(title)
     setVisibleModal(false)
   }
 
@@ -77,7 +67,7 @@ const AdvertiseModal = ({ selectedAdId, setVisibleModal, openModal }: IAdsModalP
       <div className={styles.content}>
         <form onSubmit={handleOnSubmit}>
           <div className={styles.inputForm}>
-            <h3>광고 유형</h3>
+            <legend>광고 유형</legend>
             <div className={styles.inputRadio}>
               <input
                 type='radio'
@@ -101,15 +91,10 @@ const AdvertiseModal = ({ selectedAdId, setVisibleModal, openModal }: IAdsModalP
           </div>
 
           <div className={styles.inputForm}>
-            <label htmlFor='url'>웹사이트 주소(URL)</label>
-            <input type='text' id='url' value={url} onChange={urlChangeHandler} />
-            <InputCancelIcon className={cx({ [styles.iconHidden]: url === '' })} />
-          </div>
-
-          <div className={styles.inputForm}>
             <label htmlFor='name'>광고명</label>
-            <input type='text' id='name' value={title} onChange={titleChangeHandler} />
+            <input type='text' id='name' value={title} onBlur={handleTitleBlur} onChange={titleChangeHandler} />
             <InputCancelIcon className={cx({ [styles.iconHidden]: title === '' })} />
+            {titleHasError && <p className={styles.errorMessage}>광고명은 5글자 이상이어야 합니다.</p>}
           </div>
 
           <div className={styles.inputForm}>

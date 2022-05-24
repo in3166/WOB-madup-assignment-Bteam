@@ -15,13 +15,7 @@
   height: 100%;
   background: colors.$MODAL_BACKDROP_BACKGROUND;
   opacity: 1;
-  transition: all 0.2s ease-out;
-}
-
-.backDropHidden {
-  div {
-    height: 0;
-  }
+  animation: openBackDrop 0.2s linear;
 }
 
 .modal {
@@ -38,12 +32,8 @@
   background-color: colors.$GRAYE;
   border-radius: 5px;
   // box-shadow: 0 0 10px 0 colors.$WHITE;
-  transition: all 0.2s ease-out;
   transform: translate(-50%, -50%);
-}
-
-.modalHidden {
-  top: -150%;
+  animation: openModal 0.3s linear;
 }
 
 .header {
