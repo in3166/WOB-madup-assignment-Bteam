@@ -1,13 +1,12 @@
-import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react'
+import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react'
 
-import { CloseIcon, InputCancelIcon } from 'assets/svgs/index'
-import styles from './advertiseModal.module.scss'
-import { cx } from 'styles'
-import { useRecoil } from 'hooks/state'
-import { adsListState } from 'states/adsItem'
-import Modal from '..'
-import useFormInput from 'routes/AdvertiseManage/Modal/AdvertiseModal/useFormInput'
 import { IAdsItem } from 'types/ads'
+import useFormInput from './useFormInput'
+import { CloseIcon, InputCancelIcon } from 'assets/svgs/index'
+
+import Modal from '..'
+import { cx } from 'styles'
+import styles from './advertiseModal.module.scss'
 
 interface IAdsModalProps {
   selectedAdItem: IAdsItem | null
@@ -25,7 +24,7 @@ const AdvertiseModal = ({ selectedAdItem, setVisibleModal, openModal }: IAdsModa
     value: adsType,
     setValue: setAdsType,
     valueClickHandler: typeClickHandler,
-  } = useFormInput({ initialValue: selectedAdItem?.adType || 'web' })
+  } = useFormInput({ initialValue: selectedAdItem?.adType ?? 'web' })
 
   const {
     value: title,
@@ -35,8 +34,8 @@ const AdvertiseModal = ({ selectedAdItem, setVisibleModal, openModal }: IAdsModa
     inputBlurHandler: handleTitleBlur,
   } = useFormInput({ validateFunction: validateTitle, initialValue: selectedAdItem?.title ?? '' })
 
-  const [budget, setBudget] = useState(Number(selectedAdItem?.budget))
-
+  // TODO: TEXT로 변경
+  const [budget, setBudget] = useState(Number(selectedAdItem?.budget ?? ''))
   const handleChangeBudget = (e: ChangeEvent<HTMLInputElement>) => {
     setBudget(Number(e.currentTarget.value))
   }
@@ -73,33 +72,55 @@ const AdvertiseModal = ({ selectedAdItem, setVisibleModal, openModal }: IAdsModa
                 type='radio'
                 id='type1'
                 name='type'
+                className={styles.radioInput}
                 value={1}
                 defaultChecked={adsType === 'web'}
                 onClick={typeClickHandler}
               />
-              <label htmlFor='type1'>웹사이트</label>
+              <label htmlFor='type1' className={styles.radioLabel}>
+                웹사이트
+              </label>
               <input
                 type='radio'
                 id='type2'
                 name='type'
+                className={styles.radioInput}
                 value={2}
                 defaultChecked={!adsType}
                 onClick={typeClickHandler}
               />
-              <label htmlFor='type2'>애플리케이션</label>
+              <label htmlFor='type2' className={styles.radioLabel}>
+                애플리케이션
+              </label>
             </div>
           </div>
 
           <div className={styles.inputForm}>
             <label htmlFor='name'>광고명</label>
-            <input type='text' id='name' value={title} onBlur={handleTitleBlur} onChange={titleChangeHandler} />
+            <input
+              type='text'
+              id='name'
+              value={title}
+              onBlur={handleTitleBlur}
+              onChange={titleChangeHandler}
+              className={styles.titleInput}
+            />
+            {/* TODO: 아이콘 버튼으로 감싸고 RESET */}
             <InputCancelIcon className={cx({ [styles.iconHidden]: title === '' })} />
             {titleHasError && <p className={styles.errorMessage}>광고명은 5글자 이상이어야 합니다.</p>}
           </div>
 
           <div className={styles.inputForm}>
             <label htmlFor='budget'>일 희망 예산</label>
-            <input type='number' name='budget' placeholder='0' value={budget} onChange={handleChangeBudget} />
+            <input
+              type='text'
+              pattern='[0-9]*'
+              name='budget'
+              placeholder='0'
+              value={budget}
+              onChange={handleChangeBudget}
+              className={styles.budgetInput}
+            />
             <InputCancelIcon className={cx({ [styles.iconHidden]: budget <= 0 })} />
           </div>
 

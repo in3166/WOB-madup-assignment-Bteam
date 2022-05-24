@@ -107,13 +107,14 @@
     }
   }
 
-  input[type='text'],
-  input[type='number'] {
+  .titleInput,
+  .budgetInput {
     padding: 5px;
     border-bottom: 1px solid gray;
   }
 
-  input[type='number'] {
+  // TODO: 만원 안먹힘
+  .budgetInput {
     &::after {
       position: absolute;
       top: 10px;
@@ -128,7 +129,7 @@
     display: flex;
     justify-content: space-between;
 
-    input + label {
+    .radioLabel {
       width: 100%;
       padding: 8px 10px;
       margin: 15px 10px 5px 0;
@@ -141,7 +142,7 @@
       border-radius: 4px;
     }
 
-    input[type='radio']:checked + label {
+    .radioInput:checked + label {
       border-color: rgb(73, 80, 87);
     }
   }
