@@ -1,15 +1,18 @@
 import { Suspense, useEffect, useState } from 'react'
-
-import ContentCard from './ContentCard'
-import SelectBox from './SelectBox'
-import styles from './advertiseManage.module.scss'
 import { useQuery } from 'react-query'
+import store from 'store'
+
+import { IAdsItem } from 'types/ads'
 import { useRecoil } from 'hooks/state'
 import { adsListState } from 'states/adsItem'
 import { getAdsItemList } from 'services/ads'
-import { IAdsItem } from 'types/ads'
 import { filterAdsItems } from './utils/filterAdsItems'
+
 import Modal from './Modal'
+import SelectBox from '../_shared/SelectBox'
+import ContentCard from './ContentCard'
+import styles from './advertiseManage.module.scss'
+import _ from 'lodash'
 
 const SELECT_LIST = ['전체 광고', '진행 광고', '중지 광고']
 
@@ -18,6 +21,7 @@ const AdvertiseManage = (): JSX.Element => {
   const [adsList, setAdsList] = useRecoil(adsListState)
   const [visibleModal, setVisibleModal] = useState(false)
 
+  // TODO: 분리
   const { isLoading, data } = useQuery(
     ['getAdsList'],
     () =>
@@ -41,6 +45,15 @@ const AdvertiseManage = (): JSX.Element => {
 
   useEffect(() => {
     if (data && data.length > 0) {
+      // TODO: 여기서 store?
+      const adsLocalList = store.get('ads_list')
+
+      if (adsLocalList.length > 0) {
+        let tempAds = adsLocalList.concat(data)
+        tempAds = _.uniqBy(tempAds, 'id')
+        store.set('ads_list', tempAds)
+        setAdsList(tempAds)
+      }
       setAdsList(data)
     }
   }, [data, setAdsList])
@@ -66,6 +79,7 @@ const AdvertiseManage = (): JSX.Element => {
           </Suspense>
         </div>
       </main>
+
       <Modal
         openModal={visibleModal}
         onCancel={() => {

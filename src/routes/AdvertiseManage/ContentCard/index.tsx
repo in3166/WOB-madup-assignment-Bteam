@@ -25,6 +25,7 @@ const ContentCard = ({ adsItem }: IContentCardProps): JSX.Element => {
 
   const adsCost = convertCurrencyUnits(adsItem.report.cost).toLocaleString()
 
+  // TODO: 단위 맞음?
   return (
     <article className={styles.card}>
       <header>

@@ -1,6 +1,6 @@
 import { MouseEvent, MouseEventHandler } from 'react'
 import ReactDOM from 'react-dom'
-
+import { CloseIcon, InputCancelIcon } from 'assets/svgs/index'
 import defaultImg from 'assets/defaultImg.png'
 import styles from './Modal.module.scss'
 import { IAdsItem } from 'types/ads'
@@ -32,74 +32,40 @@ const BackDrop = ({ openModal, onCancel }: IBackDropProps) => {
 }
 
 const ModalOverlay = ({ openModal, onCancel, onConfirm }: IModalProps) => {
-  // const handleImgOnError = (e: MouseEvent<HTMLImageElement>) => {
-  //   e.currentTarget.src = defaultImg
-  // }
-
-  // const { removeFromFavorite, addToFavorite } = useFavoriteUpdate({
-  //   selectedMovie: movie,
-  // })
-
-  // const handleRemoveFavorite = (e: MouseEvent<HTMLButtonElement>) => {
-  //   removeFromFavorite()
-  //   onCancel(e)
-  // }
-
-  // const handleAddFavorite = (e: MouseEvent<HTMLButtonElement>) => {
-  //   addToFavorite()
-  //   onCancel(e)
-  // }
-
-  // const makeClickButton = () => {
-  //   let onClick = handleAddFavorite
-  //   let content = '추가'
-  //   if (isRemove) {
-  //     onClick = handleRemoveFavorite
-  //     content = '제거'
-  //   }
-
-  //   return (
-  //     <button type='button' onClick={onClick}>
-  //       {content}
-  //     </button>
-  //   )
-  // }
-
-  // const clickButton = makeClickButton()
-
   return (
     <div className={cx(styles.modal, { [styles.modalHidden]: !openModal })}>
       <div className={styles.modalActive}>
         <header className={styles.header}>
           <h3>생성할 광고 유형을 선택하세요.</h3>
-          <button type='button' onClick={onCancel}>
-            X
+          <button type='button' onClick={onCancel} className={styles.cancelButton}>
+            <CloseIcon />
           </button>
         </header>
         <div className={styles.content}>
           <form>
-            <div>
-              <label htmlFor='type'>광고 유형</label>
-              <input type='checkbox' name='type' value={1} />
-              <input type='checkbox' name='type' value={2} />
-              <input type='checkbox' name='type' value={3} />
+            <div className={styles.inputForm}>
+              <h3>광고 유형</h3>
+              <div className={styles.inputRadio}>
+                <input type='radio' id='type1' name='type' value={1} defaultChecked />
+                <label htmlFor='type1'>웹사이트</label>
+                <input type='radio' id='type2' name='type' value={2} />
+                <label htmlFor='type2'>애플리케이션</label>
+              </div>
             </div>
-            <div>
+            <div className={styles.inputForm}>
               <label htmlFor='url'>웹사이트 주소(URL)</label>
               <input type='text' id='url' />
+              <InputCancelIcon />
             </div>
-            <div>
+            <div className={styles.inputForm}>
               <label htmlFor='name'>광고명</label>
               <input type='text' id='name' />
+              <InputCancelIcon />
             </div>
-            <div>
-              <label htmlFor='type'>광고 목표</label>
-              <label>
-                <input type='checkbox' name='purpose' value={1} />
-                웹사이트 유입 증대
-              </label>
-              <input type='checkbox' name='purpose' value={2} />
-              <input type='checkbox' name='purpose' value={3} />
+            <div className={styles.inputForm}>
+              <label htmlFor='budget'>일 희망 예산</label>
+              <input type='number' name='budget' />
+              <InputCancelIcon />
             </div>
           </form>
         </div>

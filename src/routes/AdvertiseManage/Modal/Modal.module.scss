@@ -29,10 +29,11 @@
   top: 50%;
   left: 50%;
   z-index: 100;
-  width: 300px;
+  width: 420px;
   height: auto;
   padding: 10px;
   overflow: hidden;
+  line-height: 1.5715;
   color: colors.$BLACK;
   background-color: colors.$GRAYE;
   border-radius: 5px;
@@ -47,33 +48,87 @@
 
 .header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 1rem;
 
-  & img {
+  img {
     width: 80px;
     max-width: 80px;
     max-height: 210px;
     margin-right: 10px;
   }
 
-  & .title {
+  .title {
     max-height: 48px;
     font-weight: 600;
   }
 
-  & dt {
+  dt {
     margin-bottom: 7px;
   }
 
-  & dd {
+  dd {
     line-height: 1.5em;
     color: colors.$BLACK;
   }
 }
 
 .content {
-  padding: 30px;
+  padding: 10px 30px 30px;
+
+  .inputForm {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 30px 0;
+
+    > * {
+      font-size: 13px !important;
+    }
+
+    svg {
+      position: absolute;
+      block-size: 10px;
+      top: 20px;
+      right: 10px;
+      width: fit-content;
+      cursor: pointer;
+      opacity: 0.3;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+
+  input[type='text'],
+  input[type='number'] {
+    padding: 5px;
+    border-bottom: 1px solid gray;
+  }
+
+  .inputRadio {
+    display: flex;
+    justify-content: space-between;
+
+    input + label {
+      width: 100%;
+      padding: 8px 10px;
+      margin: 15px 10px 5px 0;
+      font-size: 13px;
+      color: rgb(73, 80, 87);
+      text-align: center;
+      letter-spacing: -0.5px;
+      cursor: pointer;
+      border: 1px solid rgb(206, 212, 218);
+      border-radius: 4px;
+    }
+
+    input[type='radio']:checked + label {
+      border-color: rgb(73, 80, 87);
+    }
+  }
 }
 
 .footer {
@@ -88,7 +143,7 @@
     border-radius: 5px;
   }
 
-  & .confirmButton {
+  .confirmButton {
     color: colors.$GRAYD;
     background-color: colors.$MODAL_BUTTON_BACKGROUND;
 
@@ -102,7 +157,7 @@
     }
   }
 
-  & .cancelButton {
+  .cancelButton {
     width: fit-content;
     color: colors.$GRAY2;
 
@@ -119,13 +174,8 @@
 .poster {
   text-align: center;
 
-  & img {
+  img {
     max-height: 250px;
     object-fit: contain;
   }
-}
-
-strong {
-  font-size: 17px;
-  font-weight: 600;
 }
