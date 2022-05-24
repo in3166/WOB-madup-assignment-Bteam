@@ -24,7 +24,7 @@ const SelectBox = ({ selectList, currentSelect, setCurrentSelect }: ISelectBoxPr
   return (
     <div className={cx(styles.select, { [styles.openSelect]: openSelect })}>
       <button type='button' className={styles.selected} onClick={handleVisibleOptions}>
-        <div className={styles.selectedValue}>{currentSelect}</div>
+        {currentSelect}
       </button>
       <ul>
         {selectList.map((value) => {

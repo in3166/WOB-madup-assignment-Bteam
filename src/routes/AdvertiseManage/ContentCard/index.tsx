@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { MouseEvent } from 'react'
 import { IAdsItem } from 'types/ads'
 import { getDivide, getMultiple } from 'utils/num'
 import { convertCurrencyUnits } from '../utils/convertCurrencyUnits'
@@ -6,9 +7,10 @@ import styles from './contentCard.module.scss'
 
 interface IContentCardProps {
   adsItem: IAdsItem
+  handleOpenModal: (e: MouseEvent<HTMLButtonElement>) => void
 }
 
-const ContentCard = ({ adsItem }: IContentCardProps): JSX.Element => {
+const ContentCard = ({ adsItem, handleOpenModal }: IContentCardProps): JSX.Element => {
   const adsTitle = adsItem.adType === 'web' ? `웹광고_${adsItem.title}` : `앱광고_${adsItem.title}`
 
   const adsStatus = adsItem.status === 'active' ? '진행중' : '종료'
@@ -55,7 +57,9 @@ const ContentCard = ({ adsItem }: IContentCardProps): JSX.Element => {
         <dt>광고 비용</dt>
         <dd>{adsCost}만원</dd>
       </dl>
-      <button type='button'>수정하기</button>
+      <button type='button' data-id={adsItem.id} onClick={handleOpenModal}>
+        수정하기
+      </button>
     </article>
   )
 }

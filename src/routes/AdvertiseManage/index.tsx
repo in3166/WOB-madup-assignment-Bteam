@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react'
+import { MouseEvent, Suspense, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import store from 'store'
 
@@ -8,11 +8,11 @@ import { adsListState } from 'states/adsItem'
 import { getAdsItemList } from 'services/ads'
 import { filterAdsItems } from './utils/filterAdsItems'
 
-import Modal from './Modal'
 import SelectBox from '../_shared/SelectBox'
 import ContentCard from './ContentCard'
 import styles from './advertiseManage.module.scss'
 import _ from 'lodash'
+import AdvertiseModal from './AdvertiseModal/AdvertiseModal'
 
 const SELECT_LIST = ['전체 광고', '진행 광고', '중지 광고']
 
@@ -20,6 +20,7 @@ const AdvertiseManage = (): JSX.Element => {
   const [currentSelect, setCurrentSelect] = useState(SELECT_LIST[0])
   const [adsList, setAdsList] = useRecoil(adsListState)
   const [visibleModal, setVisibleModal] = useState(false)
+  const [selectedAdId, setSelectedAdId] = useState('')
 
   // TODO: 분리
   const { isLoading, data } = useQuery(
@@ -58,12 +59,18 @@ const AdvertiseManage = (): JSX.Element => {
     }
   }, [data, setAdsList])
 
+  const handleOpenModal = (e: MouseEvent<HTMLButtonElement>) => {
+    const adItemId = e.currentTarget.dataset.id
+    setSelectedAdId(adItemId || '')
+    setVisibleModal(true)
+  }
+
   return (
     <main className={styles.main}>
       <header className={styles.header}>
         <SelectBox selectList={SELECT_LIST} setCurrentSelect={setCurrentSelect} currentSelect={currentSelect} />
 
-        <button type='button' className={styles.headerButton} onClick={() => setVisibleModal(true)}>
+        <button type='button' className={styles.headerButton} onClick={handleOpenModal}>
           광고 만들기
         </button>
       </header>
@@ -74,21 +81,13 @@ const AdvertiseManage = (): JSX.Element => {
             {adsList
               .filter((value) => filterAdsItems(value, currentSelect))
               .map((value) => {
-                return <ContentCard key={value.id} adsItem={value} />
+                return <ContentCard key={value.id} adsItem={value} handleOpenModal={handleOpenModal} />
               })}
           </Suspense>
         </div>
       </main>
 
-      <Modal
-        openModal={visibleModal}
-        onCancel={() => {
-          setVisibleModal(false)
-        }}
-        onConfirm={() => {
-          setVisibleModal(false)
-        }}
-      />
+      <AdvertiseModal openModal={visibleModal} selectedAdId={selectedAdId} setVisibleModal={setVisibleModal} />
     </main>
   )
 }
