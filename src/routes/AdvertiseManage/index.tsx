@@ -9,12 +9,14 @@ import { adsListState } from 'states/adsItem'
 import { getAdsItemList } from 'services/ads'
 import { IAdsItem } from 'types/ads'
 import { filterAdsItems } from './utils/filterAdsItems'
+import Modal from './Modal'
 
 const SELECT_LIST = ['전체 광고', '진행 광고', '중지 광고']
 
 const AdvertiseManage = (): JSX.Element => {
   const [currentSelect, setCurrentSelect] = useState(SELECT_LIST[0])
   const [adsList, setAdsList] = useRecoil(adsListState)
+  const [visibleModal, setVisibleModal] = useState(false)
 
   const { isLoading, data } = useQuery(
     ['getAdsList'],
@@ -48,7 +50,7 @@ const AdvertiseManage = (): JSX.Element => {
       <header className={styles.header}>
         <SelectBox selectList={SELECT_LIST} setCurrentSelect={setCurrentSelect} currentSelect={currentSelect} />
 
-        <button type='button' className={styles.headerButton}>
+        <button type='button' className={styles.headerButton} onClick={() => setVisibleModal(true)}>
           광고 만들기
         </button>
       </header>
@@ -64,6 +66,15 @@ const AdvertiseManage = (): JSX.Element => {
           </Suspense>
         </div>
       </main>
+      <Modal
+        openModal={visibleModal}
+        onCancel={() => {
+          setVisibleModal(false)
+        }}
+        onConfirm={() => {
+          setVisibleModal(false)
+        }}
+      />
     </main>
   )
 }
