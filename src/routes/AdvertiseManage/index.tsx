@@ -1,6 +1,7 @@
-import { MouseEvent, Suspense, useEffect, useState } from 'react'
+import { MouseEvent, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import store from 'store'
+import _ from 'lodash'
 
 import { IAdsItem } from 'types/ads'
 import { useRecoil } from 'hooks/state'
@@ -8,11 +9,12 @@ import { adsListState } from 'states/adsItem'
 import { getAdsItemList } from 'services/ads'
 import { filterAdsItems } from './utils/filterAdsItems'
 
-import SelectBox from '../_shared/SelectBox'
+import DropDown from '../../components/DropDown'
 import ContentCard from './ContentCard'
 import styles from './advertiseManage.module.scss'
-import _ from 'lodash'
 import AdvertiseModal from './AdvertiseModal/AdvertiseModal'
+import Container from 'components/Container'
+import Loading from 'components/Loading'
 
 const SELECT_LIST = ['전체 광고', '진행 광고', '중지 광고']
 
@@ -32,7 +34,6 @@ const AdvertiseManage = (): JSX.Element => {
     {
       staleTime: 6 * 50 * 1000,
       useErrorBoundary: true,
-      suspense: true,
       select: (value): IAdsItem[] => {
         // TODO: end_date가 있고 오늘 날짜 보다 이전이면 status를 ended로 변경하기
         // TODO: store 저장
@@ -66,29 +67,31 @@ const AdvertiseManage = (): JSX.Element => {
   }
 
   return (
-    <main className={styles.main}>
-      <header className={styles.header}>
-        <SelectBox selectList={SELECT_LIST} setCurrentSelect={setCurrentSelect} currentSelect={currentSelect} />
+    <Container>
+      <header className={styles.mainHeader}>
+        <DropDown
+          size='medium'
+          selectList={SELECT_LIST}
+          setCurrentSelect={setCurrentSelect}
+          currentSelect={currentSelect}
+        />
 
         <button type='button' className={styles.headerButton} onClick={handleOpenModal}>
           광고 만들기
         </button>
       </header>
 
-      <main className={styles.cardWrapper}>
-        <div className={styles.cards}>
-          <Suspense fallback={<div>Loading...</div>}>
-            {adsList
-              .filter((value) => filterAdsItems(value, currentSelect))
-              .map((value) => {
-                return <ContentCard key={value.id} adsItem={value} handleOpenModal={handleOpenModal} />
-              })}
-          </Suspense>
-        </div>
-      </main>
+      {!isLoading && <Loading />}
+      <div className={styles.cards}>
+        {/* {adsList
+          .filter((value) => filterAdsItems(value, currentSelect))
+          .map((value) => {
+            return <ContentCard key={value.id} adsItem={value} handleOpenModal={handleOpenModal} />
+          })} */}
+      </div>
 
       <AdvertiseModal openModal={visibleModal} selectedAdId={selectedAdId} setVisibleModal={setVisibleModal} />
-    </main>
+    </Container>
   )
 }
 
