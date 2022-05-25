@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query'
-import { getAdsItemList } from 'services/ads'
+import { getAdsItemListAPI } from 'services/ads'
 import { IAdsItem } from 'types/advertiseManage'
 
 // TODO: 분리
@@ -7,8 +7,8 @@ export const useGetAdsList = () => {
   const { isLoading, data } = useQuery(
     ['getAdsList'],
     () =>
-      getAdsItemList().then((response): IAdsItem[] => {
-        return response.ads
+      getAdsItemListAPI().then((response): IAdsItem[] => {
+        return response
       }),
     {
       staleTime: 6 * 50 * 1000,
@@ -16,6 +16,8 @@ export const useGetAdsList = () => {
       useErrorBoundary: true,
       select: (value): IAdsItem[] => {
         if (!value.length) return []
+        // value.sort((a, b) => b.id - a.id)
+        // console.log(value)
         return value
       },
     }
