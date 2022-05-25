@@ -33,6 +33,11 @@ const DropDown = ({ selectName, selectList, currentSelect, setCurrentSelect, siz
   }
   const dropDownRef = useOnClickOutside(handleOnClose)
 
+  const handleOnClose = () => {
+    setIsOpenSelect(false)
+  }
+  const dropDownRef = useOnClickOutside(handleOnClose)
+
   return (
     <div className={cx(styles.select, styles[size], { [styles.isOpenSelect]: isOpenSelect })} ref={dropDownRef}>
       <button type='button' className={cx(styles.selected, styles[size])} onClick={handleVisibleOptions}>
