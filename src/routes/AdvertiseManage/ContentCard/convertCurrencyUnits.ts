@@ -19,7 +19,8 @@ function numberFormat(x: number) {
 }
 
 export const convertCurrencyUnits = (number: number) => {
-  const inputNumber = number < 0 ? 0 : number
+  if (number <= 0) return '0원'
+  const inputNumber = number
   const unitWords = ['', '만', '억', '조']
   const splitUnit = 10000
   const splitCount = unitWords.length

@@ -1,5 +1,6 @@
 import { DownArrow } from 'assets/svgs'
-import { Dispatch, MouseEvent, SetStateAction, useState } from 'react'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { Dispatch, MouseEvent, SetStateAction, useRef, useState } from 'react'
 import { cx } from 'styles'
 import styles from './dropDown.module.scss'
 
@@ -23,8 +24,13 @@ const DropDown = ({ selectList, currentSelect, setCurrentSelect, size }: IDropDo
     setIsOpenSelect(false)
   }
 
+  const handleCloseDropDown = () => {
+    setIsOpenSelect(false)
+  }
+  const dropDownRef = useOnClickOutside(handleCloseDropDown)
+
   return (
-    <div className={cx(styles.select, styles[size], { [styles.isOpenSelect]: isOpenSelect })}>
+    <div className={cx(styles.select, styles[size], { [styles.isOpenSelect]: isOpenSelect })} ref={dropDownRef}>
       <button type='button' className={cx(styles.selected, styles[size])} onClick={handleVisibleOptions}>
         {currentSelect}
         <DownArrow className={cx(styles.downArrowIcon, { [styles.selectMenuOpen]: isOpenSelect })} />
