@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import store from 'store'
 import { MouseEvent } from 'react'
+
 import { IAdsItem } from 'types/advertiseManage'
 import { convertValue } from './convertValue'
 import styles from './contentCard.module.scss'
@@ -21,8 +22,8 @@ const ContentCard = ({ adsItem, handleOpenModal }: IContentCardProps): JSX.Eleme
   const startDate = dayjs(adsItem.startDate).format('YYYY-MM-DD')
   const endDate = adsItem.endDate && dayjs(adsItem.endDate).format('YYYY-MM-DD')
   const adsCreatedAt = endDate ? `${startDate} (${endDate})` : startDate
-
   const adsRoas = adsItem.report.roas.toLocaleString()
+
   const tempAdsSales = (adsItem.report.roas * adsItem.report.cost) / 100
   const adsSales = convertValue(tempAdsSales)
   const adsBudget = convertValue(adsItem.budget)

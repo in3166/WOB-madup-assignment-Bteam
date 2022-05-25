@@ -7,13 +7,13 @@ import { useRecoil } from 'hooks/state'
 import { adsListState } from 'states/adsItem'
 
 import ContentCard from './ContentCard'
-import styles from './advertiseManage.module.scss'
 import AdvertiseModal from './AdvertiseModal'
 import Container from 'routes/_shared/Container'
 import DropDown from 'routes/_shared/DropDown'
 import Loading from 'routes/_shared/Loading'
-import { filterAdsItems } from './utils/filterAdsItems'
+import styles from './advertiseManage.module.scss'
 import { useGetAdsList } from './utils/useGetAdsList'
+import { filterAdsItems } from './utils/filterAdsItems'
 
 const SELECT_LIST = ['전체 광고', '진행 광고', '중지 광고']
 
@@ -63,13 +63,7 @@ const AdvertiseManage = (): JSX.Element => {
       </header>
       <Container>
         <div className={styles.containerHeader}>
-          <DropDown
-            selectName='adsStatus'
-            size='medium'
-            selectList={SELECT_LIST}
-            setCurrentSelect={setCurrentSelect}
-            currentSelect={currentSelect}
-          />
+          <DropDown selectName='adsStatus' size='medium' selectList={SELECT_LIST} setCurrentSelect={setCurrentSelect} />
 
           <button type='button' className={styles.headerButton} onClick={handleOpenModal}>
             광고 만들기

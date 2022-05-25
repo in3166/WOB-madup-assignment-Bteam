@@ -1,4 +1,5 @@
 import { MouseEvent } from 'react'
+
 import styles from './inputRadio.module.scss'
 
 interface IInputRadioProps {
@@ -6,7 +7,7 @@ interface IInputRadioProps {
   handleTypeClick: (e: MouseEvent<HTMLInputElement>) => void
 }
 
-const InputRadio = ({ adType, handleTypeClick }: IInputRadioProps): JSX.Element => {
+const InputRadio = ({ adType, handleTypeClick }: IInputRadioProps) => {
   return (
     <div className={styles.inputForm}>
       <label htmlFor='type1' className={styles.radioTitle}>

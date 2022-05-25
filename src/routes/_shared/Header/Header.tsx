@@ -1,14 +1,15 @@
-import { NotifyIcon, ProfileIcon, SettingIcon, MenuBar } from 'assets/svgs'
 import { useRecoil } from 'hooks/state'
 
 import { menuState } from 'states/adsItem'
+
+import { NotifyIcon, ProfileIcon, SettingIcon, MenuBar } from 'assets/svgs'
 import { cx } from 'styles'
 import styles from './header.module.scss'
 
 const Header = () => {
-  const [sideMenuOpen, setSideMenuopen] = useRecoil(menuState)
+  const [sideMenuOpen, setSideMenuOpen] = useRecoil(menuState)
   const handleOpenMenu = () => {
-    setSideMenuopen((prev) => !prev)
+    setSideMenuOpen((prev) => !prev)
   }
 
   return (

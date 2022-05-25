@@ -1,5 +1,6 @@
-import { InputCancelIcon } from 'assets/svgs'
 import { ChangeEvent } from 'react'
+
+import { InputCancelIcon } from 'assets/svgs'
 import { cx } from 'styles'
 import styles from './inputText.module.scss'
 
@@ -13,15 +14,7 @@ interface IInputFormProps {
   errorText: string
 }
 
-const InputText = ({
-  formTitle,
-  value,
-  onBlur,
-  onChange,
-  reset,
-  hasError,
-  errorText,
-}: IInputFormProps): JSX.Element => {
+const InputText = ({ formTitle, value, onBlur, onChange, reset, hasError, errorText }: IInputFormProps) => {
   const handleResetOnclick = () => {
     reset()
   }

@@ -9,6 +9,8 @@ import styles from './lnb.module.scss'
 import ServiceSelection from './components/ServiceSelection'
 import NavigationMenu from './components/NavigationMenu'
 import { cx } from 'styles'
+import { NavLink } from 'react-router-dom'
+
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 
 const LNB = () => {
@@ -24,21 +26,24 @@ const LNB = () => {
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [])
+  }, [handleResize])
 
   return (
     <aside ref={LNBRef} className={cx(styles.lnbContainer, { [styles.lnbMobileOpen]: sideMenuOpen })}>
       <div className={styles.logoContainer}>
-        <LogoIcon className={styles.logoIcon} />
+        <NavLink to='/'>
+          <LogoIcon className={styles.logoIcon} />
+        </NavLink>
       </div>
+
       <ServiceSelection />
       <NavigationMenu />
       <aside className={styles.linkToUsageGuide}>
         <GuideIcon />
-        <div className={styles.textArea}>
+        <button type='button' className={styles.usageGuide}>
           <h6>레버 이용 가이드</h6>
           <span>시작하기 전에 알아보기</span>
-        </div>
+        </button>
       </aside>
       <aside className={styles.linkToTerms}>
         <h6>레버는 함께 만들어갑니다.</h6>
