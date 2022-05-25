@@ -16,8 +16,6 @@ export const useGetAdsList = () => {
       useErrorBoundary: true,
       select: (value): IAdsItem[] => {
         if (!value.length) return []
-        // value.sort((a, b) => b.id - a.id)
-        // console.log(value)
         return value
       },
     }
