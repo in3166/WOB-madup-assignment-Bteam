@@ -25,7 +25,27 @@ const AdvertiseManage = (): JSX.Element => {
   const [visibleModal, setVisibleModal] = useState(false)
   const [selectedAdItem, setSelectedAdItem] = useState<IAdsItem | null>(null)
 
+<<<<<<< HEAD
   const { data, isLoading } = useGetAdsList()
+=======
+  // TODO: 분리
+  const { isLoading, data } = useQuery(
+    ['getAdsList'],
+    () =>
+      getAdsItemList().then((response): IAdsItem[] => {
+        return response.ads
+      }),
+    {
+      staleTime: 6 * 50 * 1000,
+      retryDelay: 7000,
+      useErrorBoundary: true,
+      select: (value): IAdsItem[] => {
+        if (!value.length) return []
+        return value
+      },
+    }
+  )
+>>>>>>> 178f26a39923319cc270e06a5b8428e3d1607328
 
   useEffect(() => {
     const localStatus = store.get('adsStatus')
@@ -61,7 +81,10 @@ const AdvertiseManage = (): JSX.Element => {
       return <ContentCard key={value.id} adsItem={value} handleOpenModal={handleOpenModal} />
     })
 
+<<<<<<< HEAD
   // TODO: 메인 헤더
+=======
+>>>>>>> 178f26a39923319cc270e06a5b8428e3d1607328
   return (
     <main className={styles.main}>
       <header className={styles.mainHeader}>
