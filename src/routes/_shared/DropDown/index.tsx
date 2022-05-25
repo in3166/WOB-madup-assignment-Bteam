@@ -1,5 +1,4 @@
 import store from 'store'
-
 import { DownArrow } from 'assets/svgs'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Dispatch, MouseEvent, SetStateAction, useState } from 'react'
@@ -27,11 +26,6 @@ const DropDown = ({ selectName, selectList, currentSelect, setCurrentSelect, siz
     setIsOpenSelect(false)
     store.set(selectName, selectedValue)
   }
-
-  const handleOnClose = () => {
-    setIsOpenSelect(false)
-  }
-  const dropDownRef = useOnClickOutside(handleOnClose)
 
   const handleOnClose = () => {
     setIsOpenSelect(false)
