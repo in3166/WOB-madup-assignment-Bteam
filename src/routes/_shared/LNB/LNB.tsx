@@ -10,6 +10,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 const LNB = () => {
   const [sideMenuOpen, setSideMenuopen] = useRecoil(menuState)
   const LNBRef = useOnClickOutside(() => setSideMenuopen(false))
+
   return (
     <aside ref={LNBRef} className={cx(styles.lnbContainer, { [styles.lnbMobileOpen]: sideMenuOpen })}>
       <div className={styles.logoContainer}>
