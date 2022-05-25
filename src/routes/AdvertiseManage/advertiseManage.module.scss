@@ -27,15 +27,15 @@ $ASSET_PATH: '/assets/svgs/';
   .headerButton {
     padding: 10px 20px;
     color: colors.$WHITE;
-    background-color: #586cf5;
+    background-color: colors.$PRIMARY_BUTTON_BACKGROUND;
     border-radius: 10px;
 
     &:hover {
-      background-color: #6f82fa;
+      background-color: colors.$PRIMARY_BUTTON_HOVER_BACKGROUND;
     }
 
     &:active {
-      background-color: colors.$MODAL_BUTTON_ACTIVE_BACKGROUND;
+      background-color: colors.$PRIMARY_BUTTON_ACTIVE_BACKGROUND;
     }
   }
 

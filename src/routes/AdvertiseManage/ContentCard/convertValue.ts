@@ -1,9 +1,8 @@
-// TODO: 수정
 function numberFormat(x: number) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
-export const convertCurrencyUnits = (number: number) => {
+export const convertValue = (number: number) => {
   if (number <= 0) return '0원'
   if (number < 1000) return `${number}원`
 
@@ -32,8 +31,4 @@ export const convertCurrencyUnits = (number: number) => {
   const a = `${won}원`
 
   return resultString + a
-}
-
-export const totalSales = (roas: number, cost: number) => {
-  return (roas * cost) / 100
 }

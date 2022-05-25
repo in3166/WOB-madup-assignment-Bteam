@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import store from 'store'
 import { MouseEvent } from 'react'
 import { IAdsItem } from 'types/advertiseManage'
-import { convertCurrencyUnits, totalSales } from './convertValue'
+import { convertValue } from './convertValue'
 import styles from './contentCard.module.scss'
 import { Trash } from 'assets/svgs'
 import { useRecoil } from 'hooks/state'
@@ -24,16 +24,18 @@ const ContentCard = ({ adsItem, handleOpenModal }: IContentCardProps): JSX.Eleme
 
   const adsRoas = adsItem.report.roas.toLocaleString()
   const tempAdsSales = (adsItem.report.roas * adsItem.report.cost) / 100
-  const adsBudget = convertCurrencyUnits(adsItem.budget)
-  const adsSales = convertCurrencyUnits(tempAdsSales)
-  const adsCost = convertCurrencyUnits(adsItem.report.cost)
+  const adsSales = convertValue(tempAdsSales)
+  const adsBudget = convertValue(adsItem.budget)
+  const adsCost = convertValue(adsItem.report.cost)
 
   const [, setAdsList] = useRecoil(adsListState)
+
   const handleRemoveItem = () => {
     deleteAdsItemListAPI(adsItem.id).then(() => {
       setAdsList((prev) => {
         const temp = prev.filter((value) => value.id !== adsItem.id)
-        store.remove('ads_list')
+        store.remove('adsList')
+        store.set('adsList', temp)
         return temp
       })
     })
@@ -42,7 +44,7 @@ const ContentCard = ({ adsItem, handleOpenModal }: IContentCardProps): JSX.Eleme
   return (
     <li className={styles.card}>
       <h3 className={styles.header}>
-        <div>{adsTitle}</div>
+        <div className={styles.title}>{adsTitle}</div>
         <button type='button' className={styles.trashButton} onClick={handleRemoveItem}>
           <Trash />
         </button>

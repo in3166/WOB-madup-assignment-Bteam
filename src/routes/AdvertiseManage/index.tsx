@@ -29,16 +29,16 @@ const AdvertiseManage = (): JSX.Element => {
     const localStatus = store.get('adsStatus')
     if (localStatus) setCurrentSelect(localStatus)
     if (data && data.length > 0) {
-      const adsLocalList = store.get('ads_list')
+      const adsLocalList = store.get('adsList')
       if (adsLocalList?.length > 0) {
         let tempAds = adsLocalList.concat(data)
         tempAds = _.uniqBy(tempAds, 'id')
-        store.set('ads_list', tempAds)
+        store.set('adsList', tempAds)
         setAdsList(tempAds)
         return
       }
 
-      store.set('ads_list', data)
+      store.set('adsList', data)
       setAdsList(data)
     }
   }, [data, setAdsList, currentSelect])
@@ -52,12 +52,10 @@ const AdvertiseManage = (): JSX.Element => {
 
   const Cards = adsList
     .filter((value) => filterAdsItems(value, currentSelect))
-    .sort((a, b) => b.id - a.id)
     .map((value) => {
       return <ContentCard key={value.id} adsItem={value} handleOpenModal={handleOpenModal} />
     })
 
-  // TODO: 메인 헤더
   return (
     <main className={styles.main}>
       <header className={styles.mainHeader}>
