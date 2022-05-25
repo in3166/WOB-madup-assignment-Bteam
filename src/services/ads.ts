@@ -9,7 +9,7 @@ const DATA_URL = `http://localhost:3004/`
 export const getAdsItemListAPI = () =>
   axios.get<IAdsResponseAPI>(`${DATA_URL}adlist`).then((res) =>
     new Promise<AxiosResponse>((resolve) => {
-      setTimeout(() => resolve(res), 2000)
+      setTimeout(() => resolve(res), 1000)
     }).then((response: AxiosResponse) => response.data)
   )
 

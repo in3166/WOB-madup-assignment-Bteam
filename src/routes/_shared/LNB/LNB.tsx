@@ -1,15 +1,30 @@
+import { useEffect } from 'react'
+import { debounce } from 'lodash'
+
+import { useRecoil } from 'hooks/state'
+import { menuState } from 'states/adsItem'
+
 import { GuideIcon, LogoIcon } from 'assets/svgs'
 import styles from './lnb.module.scss'
 import ServiceSelection from './components/ServiceSelection'
 import NavigationMenu from './components/NavigationMenu'
-import { menuState } from 'states/adsItem'
-import { useRecoil } from 'hooks/state'
 import { cx } from 'styles'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 
 const LNB = () => {
-  const [sideMenuOpen, setSideMenuopen] = useRecoil(menuState)
-  const LNBRef = useOnClickOutside(() => setSideMenuopen(false))
+  const [sideMenuOpen, setSideMenuOpen] = useRecoil(menuState)
+  const LNBRef = useOnClickOutside(() => setSideMenuOpen(false))
+
+  const handleResize = debounce(() => {
+    if (window.innerWidth <= 768) setSideMenuOpen(false)
+  }, 200)
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   return (
     <aside ref={LNBRef} className={cx(styles.lnbContainer, { [styles.lnbMobileOpen]: sideMenuOpen })}>

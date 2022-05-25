@@ -29,7 +29,6 @@ const AdvertiseManage = (): JSX.Element => {
     const localStatus = store.get('adsStatus')
     if (localStatus) setCurrentSelect(localStatus)
     if (data && data.length > 0) {
-      // TODO: 여기서 store?
       const adsLocalList = store.get('ads_list')
       if (adsLocalList?.length > 0) {
         let tempAds = adsLocalList.concat(data)
@@ -46,7 +45,6 @@ const AdvertiseManage = (): JSX.Element => {
 
   const handleOpenModal = (e: MouseEvent<HTMLButtonElement>) => {
     const tempItem = e.currentTarget.dataset.item ?? ''
-    // TODO: 수정
     const adItem = tempItem === '' ? '' : JSON.parse(tempItem)
     setSelectedAdItem(adItem || null)
     setVisibleModal(true)
@@ -66,7 +64,7 @@ const AdvertiseManage = (): JSX.Element => {
         <h2>광고관리</h2>
       </header>
       <Container>
-        <header className={styles.containerHeader}>
+        <div className={styles.containerHeader}>
           <DropDown
             selectName='adsStatus'
             size='medium'
@@ -78,7 +76,7 @@ const AdvertiseManage = (): JSX.Element => {
           <button type='button' className={styles.headerButton} onClick={handleOpenModal}>
             광고 만들기
           </button>
-        </header>
+        </div>
 
         {isLoading && <Loading />}
 
