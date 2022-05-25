@@ -25,10 +25,11 @@ export const getByChannelData = (currentStartDate: string, currentEndDate: strin
 }
 
 export const getByChannelDefaultData = (currentStartDate: string, currentEndDate: string) => {
-  return axios.get(`${DATA_URL}byChannel?date_gte=${currentStartDate}&date_lte=${currentEndDate}`).then((res) =>
-    res.data.map((el: IByChannelData) => {
+  return axios.get(`${DATA_URL}byChannel?date_gte=${currentStartDate}&date_lte=${currentEndDate}`).then((res) => {
+    console.log('getByChannelDefaultData: ', res)
+    return res.data.map((el: IByChannelData) => {
       el.sales = (el.roas * el.cost) / 100
       return el
     })
-  )
+  })
 }

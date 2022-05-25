@@ -10,9 +10,9 @@ const CurrentStatusOfMedium = () => {
   // console.log(byChannelData)
 
   const reduceChannelData = (_channel: string) => {
-    const fiteredDate = byChannelData.filter((el: { channel: string }) => el.channel === _channel)
-    return fiteredDate.reduce((acc, cur, i) => {
-      if (i === fiteredDate.length - 1) {
+    const filteredDate = byChannelData.filter((el: { channel: string }) => el.channel === _channel)
+    return filteredDate.reduce((acc, cur, i) => {
+      if (i === filteredDate.length - 1) {
         return {
           sales: cur.sales + acc.sales,
           channel: cur.channel,
@@ -20,9 +20,9 @@ const CurrentStatusOfMedium = () => {
           imp: cur.imp + acc.imp,
           click: cur.click + acc.click,
           convValue: cur.convValue + acc.convValue,
-          ctr: (cur.ctr + acc.ctr) / fiteredDate.length,
-          cpc: (cur.cpc + acc.cpc) / fiteredDate.length,
-          roas: (cur.roas + acc.roas) / fiteredDate.length,
+          ctr: (cur.ctr + acc.ctr) / filteredDate.length,
+          cpc: (cur.cpc + acc.cpc) / filteredDate.length,
+          roas: (cur.roas + acc.roas) / filteredDate.length,
         }
       }
       return {
