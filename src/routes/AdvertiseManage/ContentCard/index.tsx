@@ -1,7 +1,6 @@
 import dayjs from 'dayjs'
 import { MouseEvent } from 'react'
 import { IAdsItem } from 'types/advertiseManage'
-import { getDivide, getMultiple } from 'utils/num'
 import { convertCurrencyUnits } from './convertCurrencyUnits'
 import styles from './contentCard.module.scss'
 

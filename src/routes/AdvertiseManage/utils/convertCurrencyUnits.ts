@@ -1,3 +1,5 @@
+import { getDivide } from 'utils/num'
+
 // export const convertCurrencyUnits = (a: number) => {
 //   if (a >= 10000) {
 //     return Math.floor(getDivide(a, 10000))
@@ -8,14 +10,16 @@
 //   return a
 // }
 
-// TODO: 수정
+// 23,000 => 23천원
+// 255,000 => 25만 3천원
+// 2,555,000 => 255만 5천원
+// 22,555,000 => 2255만 5천원
 function numberFormat(x: number) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
 export const convertCurrencyUnits = (number: number) => {
-  if (number <= 0) return '0원'
-  const inputNumber = number
+  const inputNumber = number < 0 ? 0 : number
   const unitWords = ['', '만', '억', '조']
   const splitUnit = 10000
   const splitCount = unitWords.length

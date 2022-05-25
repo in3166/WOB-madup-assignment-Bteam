@@ -4,7 +4,7 @@ import { IByChannelData } from 'types/dashboard'
 
 const DATA_URL = `http://localhost:3004/`
 
-export const getAdsItemList = () => axios.get<{ count: number; ads: IAdsItem[] }>(`${DATA_URL}/adlist`)
+export const getAdsItemList = () => axios.get<{ count: number; ads: IAdsItem[] }>(`${DATA_URL}adlist`)
 
 // TODO임시 데이터 호출 로직
 export const getDailyData = (currentStartDate: string, currentEndDate: string, setDailyData: Function) => {
