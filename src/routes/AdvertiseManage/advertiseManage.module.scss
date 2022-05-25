@@ -39,7 +39,7 @@ $ASSET_PATH: '/assets/svgs/';
     }
   }
 
-  @include responsive.between(M, SD) {
+  @include responsive.mobileOnly {
     flex-direction: column;
 
     > div {
