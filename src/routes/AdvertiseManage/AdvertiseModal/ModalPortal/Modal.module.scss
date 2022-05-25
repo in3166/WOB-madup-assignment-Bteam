@@ -20,12 +20,8 @@
 .modal {
   @include position.fixed(50% auto auto 50%);
   z-index: 100;
-<<<<<<< HEAD
   width: 100%;
   max-width: 420px;
-=======
-  width: 420px;
->>>>>>> 178f26a39923319cc270e06a5b8428e3d1607328
   height: auto;
   padding: 10px;
   overflow: hidden;
