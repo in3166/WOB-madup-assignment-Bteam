@@ -1,27 +1,34 @@
 import { IAdsItem } from 'types/advertiseManage'
 import { axios } from 'hooks/worker'
+import { IByChannelData } from 'types/dashboard'
 
-const DATA_URL = 'http://localhost:3004/adlist'
+const DATA_URL = `http://localhost:3004/`
 
-export const getAdsItemList = () => axios.get<{ count: number; ads: IAdsItem[] }>(DATA_URL)
+export const getAdsItemList = () => axios.get<{ count: number; ads: IAdsItem[] }>(`${DATA_URL}/adlist`)
 
-interface IPutAdsItemListParams {
-  id: number
-  adType: string
-  title: string
-  budget: number
-  status: string
-  startDate: string
-  endDate: string | null
-  report: {
-    cost: number
-    convValue: number
-    roas: number
-  }
+// TODO임시 데이터 호출 로직
+export const getDailyData = (currentStartDate: string, currentEndDate: string, setDailyData: Function) => {
+  return axios
+    .get(`${DATA_URL}daily?date_gte=${currentStartDate}&date_lte=${currentEndDate}`)
+    .then((res) => setDailyData(res.data))
 }
-export const putAdsItemList = (params: IPutAdsItemListParams) =>
-  axios.patch(DATA_URL, {
-    params: {
-      ...params,
-    },
-  })
+
+export const getByChannelData = (currentStartDate: string, currentEndDate: string, setByChannelData: Function) => {
+  return axios.get(`${DATA_URL}byChannel?date_gte=${currentStartDate}&date_lte=${currentEndDate}`).then((res) =>
+    setByChannelData(
+      res.data.map((el: IByChannelData) => {
+        el.sales = (el.roas * el.cost) / 100
+        return el
+      })
+    )
+  )
+}
+
+export const getByChannelDefaultData = (currentStartDate: string, currentEndDate: string) => {
+  return axios.get(`${DATA_URL}byChannel?date_gte=${currentStartDate}&date_lte=${currentEndDate}`).then((res) =>
+    res.data.map((el: IByChannelData) => {
+      el.sales = (el.roas * el.cost) / 100
+      return el
+    })
+  )
+}
