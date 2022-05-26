@@ -1,15 +1,16 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 import { useSetRecoilState } from 'recoil'
-import { DateRange } from 'react-date-range'
+import { DateRange, Range } from 'react-date-range'
 import { ko } from 'date-fns/locale'
 import dayjs from 'dayjs'
 import store from 'store'
 
 import { byChannelFetchState, dailyFetchState } from 'states/dashboard'
 
-import styles from './calendarModal.module.scss'
+import Button from 'components/Button'
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
+import styles from './calendarModal.module.scss'
 
 interface IProps {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>
@@ -17,10 +18,8 @@ interface IProps {
 
 const currentStartDate = store.get('startDate')
 const currentEndDate = store.get('endDate')
-const prevStartDate = store.get('prevStartDate')
-const prevEndDate = store.get('prevEndDate')
 
-if (!currentStartDate && !currentEndDate) {
+if (!currentStartDate || !currentEndDate) {
   store.set('startDate', '2022-04-14')
   store.set('endDate', '2022-04-20')
   store.set('prevEndDate', '2022-04-13')
@@ -28,10 +27,12 @@ if (!currentStartDate && !currentEndDate) {
 }
 
 const CalendarModal = ({ setIsModalOpen }: IProps) => {
-  const [dateRange, setDateRange] = useState<any>([
+  const [currentCalendarStartDate] = useState(store.get('startDate'))
+  const [currentCalenderEndDate] = useState(store.get('endDate'))
+  const [dateRange, setDateRange] = useState<Range[]>([
     {
-      startDate: new Date(dayjs(currentStartDate).format('YYYY-MM-DD')),
-      endDate: new Date(dayjs(currentEndDate).format('YYYY-MM-DD')),
+      startDate: new Date(dayjs(currentCalendarStartDate).format('YYYY-MM-DD')),
+      endDate: new Date(dayjs(currentCalenderEndDate).format('YYYY-MM-DD')),
       key: 'selection',
     },
   ])
@@ -59,26 +60,50 @@ const CalendarModal = ({ setIsModalOpen }: IProps) => {
   }
 
   return (
-    <div className={styles.calendarModalContainer}>
-      <DateRange
-        editableDateInputs={false}
-        onChange={(item) => setDateRange([item.selection])}
-        ranges={dateRange}
-        locale={ko}
-        months={2}
-        direction='horizontal'
-        dateDisplayFormat='yyyy년 MM월 dd일'
-        // showDateDisplay={false}
-      />
-      <div className={styles.buttonContainer}>
-        <button className={styles.button} type='button' onClick={handleModalClose}>
-          닫기
-        </button>
-        <button className={styles.button} type='button' onClick={handleGetData}>
-          적용
-        </button>
-      </div>
-    </div>
+    <aside className={styles.calendarModalContainer}>
+      <section className={styles.pickedDateDisplay}>
+        {startDateTransformed} ~ {endDateTransformed}
+      </section>
+      <section className={styles.calendar}>
+        <DateRange
+          editableDateInputs={false}
+          onChange={(item) => setDateRange([item.selection])}
+          ranges={dateRange}
+          locale={ko}
+          months={2}
+          direction='horizontal'
+          dateDisplayFormat='yyyy년 MM월 dd일'
+          minDate={new Date('2022-02-01')}
+          maxDate={new Date('2022-04-20')}
+          showPreview={false}
+          showDateDisplay={false}
+          monthDisplayFormat='yyyy년 MM월'
+          rangeColors={['#586cf5']}
+        />
+      </section>
+      <section className={styles.buttonContainer}>
+        <Button
+          type='button'
+          text='닫기'
+          width='80px'
+          height='40px'
+          border='1px solid #94a2ad'
+          color='black'
+          borderRadius='10px'
+          onClick={handleModalClose}
+        />
+        <Button
+          type='button'
+          text='적용'
+          width='80px'
+          height='40px'
+          backgroundColor='#586cf5'
+          color='white'
+          borderRadius='10px'
+          onClick={handleGetData}
+        />
+      </section>
+    </aside>
   )
 }
 

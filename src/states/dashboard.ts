@@ -1,6 +1,5 @@
 import { atom } from 'recoil'
 import { IByChannelData, IDailyData } from 'types/dashboard'
-import { getByChannelDefaultData } from 'services/ads'
 
 export const dailyDataResultState = atom<IDailyData[]>({
   key: '#dailyDataResultState',
@@ -9,14 +8,20 @@ export const dailyDataResultState = atom<IDailyData[]>({
 
 export const byChannelDataResultState = atom<IByChannelData[]>({
   key: '#byChannelDataResultState',
-  default: getByChannelDefaultData('2022-02-01', '2022-02-02'),
+  default: [],
 })
 
 export const dailyFetchState = atom<boolean>({
   key: '#dailyFetchState',
   default: false,
 })
+
 export const byChannelFetchState = atom<boolean>({
   key: '#byChannelFetchState',
   default: false,
+})
+
+export const prevDailyDataResultState = atom<IDailyData[]>({
+  key: '#prevdailyDataResultState',
+  default: [],
 })

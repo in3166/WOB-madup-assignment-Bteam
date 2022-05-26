@@ -1,44 +1,52 @@
-import { DownArrow, LogoIcon, PlusIcon } from 'assets/svgs'
-import cx from 'classnames'
-import styles from './serviceSelection.module.scss'
 import { useState } from 'react'
+import store from 'store'
 
-const MENU_TITLES = [
-  { id: 1, title: '매드업' },
-  { id: 2, title: '프리온보딩' },
-]
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+
+import { DownArrow, PlusIcon } from 'assets/svgs'
+import { cx } from 'styles'
+import styles from './serviceSelection.module.scss'
+
+const MENU_TITLES = store.get('user')?.services
 
 const ServiceSelection = () => {
   const [currentServiceTitle, setCurrentServiceTitle] = useState('매드업')
-  const [isSelectMenuOpen, setIsSelectMenuOpen] = useState(false)
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false)
 
   const handleToggleSelectMenu = () => {
-    setIsSelectMenuOpen((prev) => !prev)
+    setIsDropDownOpen((prev) => !prev)
   }
 
-  const handleMenuSelect = (title: string) => {
-    setCurrentServiceTitle(title)
-    setIsSelectMenuOpen(false)
+  const handleMenuSelect = (e: React.MouseEvent<HTMLLIElement>) => {
+    const selectedValue = e.currentTarget.dataset.value
+    setCurrentServiceTitle(selectedValue ?? MENU_TITLES[0].title)
+    setIsDropDownOpen(false)
   }
+
+  const handleCloseDropDown = () => {
+    setIsDropDownOpen(false)
+  }
+
+  const dropDownRef = useOnClickOutside(handleCloseDropDown)
 
   return (
-    <div className={styles.serviceSelection}>
+    <section className={styles.serviceSelection}>
       <h6 className={styles.sideMenuTitle}>서비스</h6>
-      <div className={styles.selectBox}>
+      <div className={styles.selectBox} ref={dropDownRef}>
         {currentServiceTitle}
         <DownArrow
-          className={cx(styles.downArrowIcon, { [styles.selectMenuOpen]: isSelectMenuOpen })}
+          className={cx(styles.downArrowIcon, { [styles.selectMenuOpen]: isDropDownOpen })}
           onClick={handleToggleSelectMenu}
         />
-        {isSelectMenuOpen && (
-          <ul className={styles.selectMenuList}>
-            {MENU_TITLES.map((menu) => (
+        {isDropDownOpen && (
+          <ul className={cx(styles.selectMenuList, { [styles.selectMenuListOpen]: isDropDownOpen })}>
+            {MENU_TITLES.map((menu: { id: number; title: string }) => (
               <li
-                role='menuitem'
+                aria-selected
+                role='option'
                 key={`${menu.id}-${menu.title}`}
-                onClick={() => {
-                  handleMenuSelect(menu.title)
-                }}
+                data-value={menu.title}
+                onClick={handleMenuSelect}
               >
                 {menu.title}
               </li>
@@ -50,7 +58,7 @@ const ServiceSelection = () => {
           </ul>
         )}
       </div>
-    </div>
+    </section>
   )
 }
 

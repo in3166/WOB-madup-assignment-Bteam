@@ -1,13 +1,47 @@
 @use '/src/styles/constants/colors';
+@use '/src/styles/mixins/responsive';
 
 .headerContainer {
   display: flex;
+  flex: 1 2 0%;
   align-items: center;
-  justify-content: end;
-  min-width: 800px;
+  justify-content: space-between;
+  min-width: 300px;
   height: 80px;
   margin-right: 40px;
   margin-bottom: 30px;
+  margin-left: 40px;
+  border-bottom: 1px solid colors.$GRAY50;
+
+  @include responsive.mobileOnly {
+    min-width: 130px;
+    margin-right: 5px;
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+    width: auto;
+  }
+
+  .meneOpenButton {
+    display: none;
+    padding-left: 10px;
+
+    svg {
+      max-width: 30px;
+    }
+    @include responsive.mobileOnly {
+      display: block;
+    }
+  }
+
+  .meneOpenClick {
+    padding-left: 280px;
+    margin-right: 10px;
+  }
 }
 
 .profileContainer {
@@ -42,4 +76,8 @@
 .userName {
   font-size: 14px;
   color: colors.$GRAY800;
+
+  span {
+    color: colors.$PRIMARY_BUTTON_BACKGROUND;
+  }
 }

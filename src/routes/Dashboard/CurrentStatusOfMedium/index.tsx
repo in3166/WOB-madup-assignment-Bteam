@@ -1,98 +1,73 @@
-/* eslint-disable react/style-prop-object */
-import styles from './CurrentStatusOfMedium.module.scss'
 import { useRecoilState } from 'recoil'
+
 import { byChannelDataResultState } from 'states/dashboard'
+import { IVictoryBarData } from 'types/dashboard'
+import { channelDataProcess } from 'utils/adDataProcess'
+
 import Recharts from './Recharts'
 import Table from './Table'
+import styles from './currentStatusOfMedium.module.scss'
 
 const CurrentStatusOfMedium = () => {
   const [byChannelData] = useRecoilState(byChannelDataResultState)
-  // console.log(byChannelData)
 
-  const reduceChannelData = (_channel: string) => {
-    const fiteredDate = byChannelData.filter((el: { channel: string }) => el.channel === _channel)
-    return fiteredDate.reduce((acc, cur, i) => {
-      if (i === fiteredDate.length - 1) {
-        return {
-          sales: cur.sales + acc.sales,
-          channel: cur.channel,
-          cost: cur.cost + acc.cost,
-          imp: cur.imp + acc.imp,
-          click: cur.click + acc.click,
-          convValue: cur.convValue + acc.convValue,
-          ctr: (cur.ctr + acc.ctr) / fiteredDate.length,
-          cpc: (cur.cpc + acc.cpc) / fiteredDate.length,
-          roas: (cur.roas + acc.roas) / fiteredDate.length,
-        }
-      }
-      return {
-        sales: cur.sales + acc.sales,
-        channel: cur.channel,
-        cost: cur.cost + acc.cost,
-        imp: cur.imp + acc.imp,
-        click: cur.click + acc.click,
-        convValue: cur.convValue + acc.convValue,
-        ctr: cur.ctr + acc.ctr,
-        cpc: cur.cpc + acc.cpc,
-        roas: cur.roas + acc.roas,
-      }
-    })
+  const combinedAllChannelDataObj: any = {
+    google: channelDataProcess(byChannelData, 'google'),
+    naver: channelDataProcess(byChannelData, 'naver'),
+    facebook: channelDataProcess(byChannelData, 'facebook'),
+    kakao: channelDataProcess(byChannelData, 'kakao'),
   }
 
-  const reducedAllChannelDataObj: any = {
-    google: reduceChannelData('google'),
-    naver: reduceChannelData('naver'),
-    facebook: reduceChannelData('facebook'),
-    kakao: reduceChannelData('kakao'),
-  }
-
-  const reducedAllChannelDataArr = [
-    reduceChannelData('google'),
-    reduceChannelData('facebook'),
-    reduceChannelData('naver'),
-    reduceChannelData('kakao'),
+  const combinedAllChannelDataArr = [
+    channelDataProcess(byChannelData, 'google'),
+    channelDataProcess(byChannelData, 'facebook'),
+    channelDataProcess(byChannelData, 'naver'),
+    channelDataProcess(byChannelData, 'kakao'),
   ]
 
   const createVictoryBarData = (channel: string) => {
-    const result = []
-    // eslint-disable-next-line guard-for-in
-    for (const key in reducedAllChannelDataObj[channel]) {
+    const result: IVictoryBarData[] = []
+    for (const key in combinedAllChannelDataObj[channel]) {
       if (key === 'sales' || key === 'cost' || key === 'imp' || key === 'click' || key === 'convValue')
         result.push({
           xAxis: key,
           yAxis: Math.round(
-            (reducedAllChannelDataObj[channel][key] /
-              (reducedAllChannelDataObj.google[key] +
-                reducedAllChannelDataObj.naver[key] +
-                reducedAllChannelDataObj.facebook[key] +
-                reducedAllChannelDataObj.kakao[key])) *
+            (combinedAllChannelDataObj[channel][key] /
+              (combinedAllChannelDataObj.google[key] +
+                combinedAllChannelDataObj.naver[key] +
+                combinedAllChannelDataObj.facebook[key] +
+                combinedAllChannelDataObj.kakao[key])) *
               100
           ),
         })
     }
     return result
   }
-  // console.log(reducedAllChannelDataObj, 'reducedAllChannelDataObj')
-  // console.log(reducedAllChannelDataArr, 'reducedAllChannelDataArr')
-  // console.log(createVictoryBarData('facebook'), 'createVictoryBarData')
 
-  const CalculatingSumOfColumns = (column: string) => {
+  const calculatingSumOfColumns = (column: string) => {
     return (
-      reducedAllChannelDataObj.google[column] +
-      reducedAllChannelDataObj.naver[column] +
-      reducedAllChannelDataObj.facebook[column] +
-      reducedAllChannelDataObj.kakao[column]
+      combinedAllChannelDataObj.google[column] +
+      combinedAllChannelDataObj.naver[column] +
+      combinedAllChannelDataObj.facebook[column] +
+      combinedAllChannelDataObj.kakao[column]
     )
   }
+
   return (
-    <div className={styles.currentStatusOfMediumContainer}>
-      <div className={styles.rechartsContainer}>
-        <Recharts createVictoryBarData={createVictoryBarData} />
+    <section className={styles.currentStatusOfMediumSectionWrapper}>
+      <h3 className={styles.currentStatusOfMediumTitle}>매체 현황</h3>
+      <div className={styles.currentStatusOfMediumContainer}>
+        <div className={styles.rechartsContainer}>
+          <Recharts createVictoryBarData={createVictoryBarData} />
+        </div>
+        <div className={styles.tableContainer}>
+          <Table
+          combinedAllChannelDataArr={combinedAllChannelDataArr}
+          calculatingSumOfColumns={calculatingSumOfColumns}
+        />
+        </div>
       </div>
-      <div className={styles.tableContainer}>
-        <Table reducedAllChannelDataArr={reducedAllChannelDataArr} CalculatingSumOfColumns={CalculatingSumOfColumns} />
-      </div>
-    </div>
+    </section>
   )
 }
 

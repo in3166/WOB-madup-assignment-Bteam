@@ -1,8 +1,14 @@
 import dayjs from 'dayjs'
+import store from 'store'
 import { MouseEvent } from 'react'
+
 import { IAdsItem } from 'types/advertiseManage'
-import { convertCurrencyUnits } from './convertCurrencyUnits'
+import { convertValue } from './convertValue'
 import styles from './contentCard.module.scss'
+import { Trash } from 'assets/svgs'
+import { useRecoil } from 'hooks/state'
+import { adsListState } from 'states/adsItem'
+import { deleteAdsItemListAPI } from 'services/ads'
 
 interface IContentCardProps {
   adsItem: IAdsItem
@@ -10,29 +16,41 @@ interface IContentCardProps {
 }
 
 const ContentCard = ({ adsItem, handleOpenModal }: IContentCardProps): JSX.Element => {
-  // TODO: bignumber 제거, 정리
   const adsTitle = adsItem.adType === 'web' ? `웹광고_${adsItem.title}` : `앱광고_${adsItem.title}`
-
   const adsStatus = adsItem.status === 'active' ? '진행중' : '종료'
+
   const startDate = dayjs(adsItem.startDate).format('YYYY-MM-DD')
   const endDate = adsItem.endDate && dayjs(adsItem.endDate).format('YYYY-MM-DD')
   const adsCreatedAt = endDate ? `${startDate} (${endDate})` : startDate
-
-  const adsBudget = convertCurrencyUnits(adsItem.budget).toLocaleString()
   const adsRoas = adsItem.report.roas.toLocaleString()
-  // roas * 광고비 / 100
+
   const tempAdsSales = (adsItem.report.roas * adsItem.report.cost) / 100
-  const adsSales = convertCurrencyUnits(tempAdsSales) ?? 0
-  // /const adsSales = tempAdsSales.toLocaleString()
+  const adsSales = convertValue(tempAdsSales)
+  const adsBudget = convertValue(adsItem.budget)
+  const adsCost = convertValue(adsItem.report.cost)
 
-  const adsCost = convertCurrencyUnits(adsItem.report.cost) ?? 0
+  const [, setAdsList] = useRecoil(adsListState)
 
-  // TODO: 단위 맞음?
+  const handleRemoveItem = () => {
+    deleteAdsItemListAPI(adsItem.id).then(() => {
+      setAdsList((prev) => {
+        const temp = prev.filter((value) => value.id !== adsItem.id)
+        store.remove('adsList')
+        store.set('adsList', temp)
+        return temp
+      })
+    })
+  }
+
   return (
-    <article className={styles.card}>
-      <header>
-        <h3>{adsTitle}</h3>
-      </header>
+    <li className={styles.card}>
+      <h3 className={styles.header}>
+        <div className={styles.title}>{adsTitle}</div>
+        <button type='button' className={styles.trashButton} onClick={handleRemoveItem}>
+          <Trash />
+        </button>
+      </h3>
+
       <dl>
         <div>
           <dt>상태</dt>
@@ -59,10 +77,15 @@ const ContentCard = ({ adsItem, handleOpenModal }: IContentCardProps): JSX.Eleme
           <dd>{adsCost}</dd>
         </div>
       </dl>
-      <button type='button' data-item={JSON.stringify(adsItem)} onClick={handleOpenModal}>
+      <button
+        type='button'
+        data-item={JSON.stringify(adsItem)}
+        onClick={handleOpenModal}
+        className={styles.updateButton}
+      >
         수정하기
       </button>
-    </article>
+    </li>
   )
 }
 

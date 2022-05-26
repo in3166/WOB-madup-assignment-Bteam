@@ -1,46 +1,33 @@
-import { useState } from 'react'
 import { useQuery } from 'react-query'
-import { useRecoilState } from 'recoil'
+import { useState, useMount } from 'hooks'
+import { useRecoilState, useSetRecoilState } from 'hooks/state'
 import store from 'store'
 
-import { byChannelDataResultState, byChannelFetchState, dailyDataResultState, dailyFetchState } from 'states/dashboard'
+import { byChannelDataResultState, byChannelFetchState } from 'states/dashboard'
+import { getByChannelData } from 'services/ads'
 
+import AdStatus from './AdStatus'
 import CalendarModal from './CalendarModal/CalendarModal'
-import AdTop from './AdTop'
-import Chart from './Chart'
-import styles from './dashboard.module.scss'
 import CurrentStatusOfMedium from './CurrentStatusOfMedium'
-import { getDailyData, getByChannelData } from 'services/ads'
-
-// TODO 달력 디폴트 날짜 설정
-// const defaultStartDate = dayjs(new Date(2022, 1, 1)).format('YYYY-MM-DD')
-// const defaultEndDate = dayjs(new Date(2022, 1, 2)).format('YYYY-MM-DD')
+import { DownArrow } from 'assets/svgs'
+import styles from './dashboard.module.scss'
+import Loading from 'routes/_shared/Loading'
 
 const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
   const currentStartDate = store.get('startDate')
   const currentEndDate = store.get('endDate')
-  const [dailyFetch, setDailyFetch] = useRecoilState(dailyFetchState)
+
   const [byChannelFetch, setByChannelFetch] = useRecoilState(byChannelFetchState)
-  const [dailyData, setDailyData] = useRecoilState(dailyDataResultState)
-  const [byChannelData, setByChannelData] = useRecoilState(byChannelDataResultState)
+  const setByChannelData = useSetRecoilState(byChannelDataResultState)
+  const [byChannelData] = useRecoilState(byChannelDataResultState)
 
-  const { data: dailyDataResult } = useQuery(
-    ['getDailyData', currentStartDate, currentEndDate],
-    () => {
-      getDailyData(currentStartDate, currentEndDate, setDailyData)
-    },
-    {
-      useErrorBoundary: true,
-      enabled: !!dailyFetch,
-      staleTime: 6 * 50 * 1000,
-      onSuccess: () => {
-        setDailyFetch(false)
-      },
-    }
-  )
+  useMount(() => {
+    getByChannelData(currentStartDate, currentEndDate, setByChannelData)
+  })
 
-  const { data: byChannelDataResult } = useQuery(
+  const { isLoading } = useQuery(
     ['getByChannelData', currentStartDate, currentEndDate],
     () => {
       getByChannelData(currentStartDate, currentEndDate, setByChannelData)
@@ -49,6 +36,7 @@ const Dashboard = () => {
       useErrorBoundary: true,
       enabled: !!byChannelFetch,
       staleTime: 6 * 50 * 1000,
+      retryDelay: 7000,
       onSuccess: () => {
         setByChannelFetch(false)
       },
@@ -59,17 +47,14 @@ const Dashboard = () => {
     setIsModalOpen(true)
   }
 
-  // 선택하신 기간에 대해서
-  // dailyData: 날짜별 데이터
-  // byChannelData: 채널 별 데이터
-
   return (
-    <div>
+    <>
       <header className={styles.header}>
         <h2>대시보드</h2>
         <div className={styles.calendarContainer}>
           <button className={styles.calendarOpenButton} type='button' onClick={handleOpenModal}>
-            {`${currentStartDate} - ${currentEndDate}`}
+            {`${currentStartDate} ~ ${currentEndDate}`}
+            <DownArrow />
           </button>
           {isModalOpen && (
             <div className={styles.calendar}>
@@ -79,19 +64,12 @@ const Dashboard = () => {
         </div>
       </header>
       <main className={styles.main}>
-        <div className={styles.adSectionWrapper}>
-          <h2 className={styles.adSectionTitle}>통합 광고 현황</h2>
-          <div className={styles.boardWrapper}>
-            <AdTop />
-            <Chart />
-          </div>
-        </div>
-        <div className={styles.currentStatusOfMediumSectionWrapper}>
-          <h2 className={styles.currentStatusOfMediumTitle}>매체 현황</h2>
-          <CurrentStatusOfMedium />
-        </div>
+        {isLoading && <Loading />}
+
+        <AdStatus />
+        {byChannelData.length > 0 && <CurrentStatusOfMedium />}
       </main>
-    </div>
+    </>
   )
 }
 export default Dashboard
