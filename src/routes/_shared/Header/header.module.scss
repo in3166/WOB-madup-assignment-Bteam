@@ -76,4 +76,8 @@
 .userName {
   font-size: 14px;
   color: colors.$GRAY800;
+
+  span {
+    color: colors.$PRIMARY_BUTTON_BACKGROUND;
+  }
 }
